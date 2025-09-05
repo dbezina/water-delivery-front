@@ -1,0 +1,19 @@
+.product-img-bg {
+    width: 100%;
+    height: 200px;
+    background-image: url('img/water-5l.jpg');
+    background-size: cover;
+    /* заполнение и обрезка */
+    background-position: center;
+    /* центрирование */
+    background-repeat: no-repeat;
+}
+
+.product-img {
+    width: 100%;
+    /* ширина карточки */
+    height: 200px;
+    /* фиксированная высота */
+    object-fit: contain;
+    /* обрезка и масштабирование, чтобы заполнить */
+}

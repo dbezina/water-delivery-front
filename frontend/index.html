@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaDelivery</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container d-flex justify-content-between">
+            <!-- Logo -->
+            <a class="navbar-brand fw-bold text-primary" href="#">
+                <i class="bi bi-droplet-half"></i> AquaDelivery
+            </a>
+
+            <!-- Icons right -->
+            <div class="d-flex gap-2">
+                <!-- Cart -->
+                <a href="#" class="btn btn-outline-secondary position-relative" id="cartButton">
+                    <i class="bi bi-cart3"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartBadge">0</span>
+                </a>
+
+                <button class="bi bi-person-circle btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal"> Login/Switch</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- User products -->
+    <div id="role-user" class="pt-5 mt-5 container role-section">
+        <h2 class="text-center mb-4">Our Products</h2>
+        <div class="row" id="productsRow"></div>
+    </div>
+
+    <!-- Admin panel -->
+    <div id="role-admin" class="pt-5 mt-5 container role-section">
+        <h2 class="text-center mb-4">Admin Panel</h2>
+        <h3>Products</h3>
+        <div class="row" id="productsRowAdmin"></div>
+        <h3>Orders</h3>
+        <div class="row" id="ordersListAdmin"></div>
+    </div>
+
+    <!-- Courier panel -->
+    <div id="role-courier" class="pt-5 mt-5 container role-section">
+        <h2 class="text-center mb-4">Courier Panel</h2>
+        <div class="row" id="ordersList"></div>
+    </div>
+
+    <!-- Login modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="loginForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Login</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="cartModalBody">
+                    <!-- Dynamic list of products -->
+                </div>
+                <div class="modal-footer">
+                    <input type="text" id="deliveryAddress" class="form-control me-2" placeholder="Delivery address">
+                    <button type="button" class="btn btn-primary" id="checkoutBtn">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="./scripts.js"></script>
+</body>
+</html>

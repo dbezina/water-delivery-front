@@ -3,6 +3,8 @@ import { showPageByRole } from "./ui.js";
 import { loadProducts } from "./products.js";
 import { fetchOrders } from "./orders.js";
 import { apiUrl } from "./config.js";
+import { connectNotifications } from "./notifications.js";
+
 
 function normalizeRole(role) {
   switch (role) {
@@ -41,16 +43,18 @@ export function setupLogin() {
 
       const data = await response.json();
       const nRole = normalizeRole(data.userRole);
+      const userName = data.userName;
 
       sessionStorage.setItem("authToken", data.token);
       sessionStorage.setItem("userRole", nRole);
+      sessionStorage.setItem("userName", userName);
 
       const modal = bootstrap.Modal.getInstance(
         document.getElementById("loginModal")
       );
       modal.hide();
-      const loginBtn = document.querySelector('button[data-bs-toggle="modal"]');
-      loginBtn.textContent = ` Login/Switch - ${sessionStorage.getItem('userRole')}`;
+      //  const loginBtn = document.querySelector('button[data-bs-toggle="modal"]');
+      //  loginBtn.textContent = ` Login/Switch - ${sessionStorage.getItem('userRole')}`;
 
       showPageByRole(nRole);
       if (nRole === "admin" || nRole === "user") {
@@ -60,9 +64,91 @@ export function setupLogin() {
       if (nRole === "courier" || nRole === "admin") {
         fetchOrders();
       }
+
+      connectNotifications();
     } catch (err) {
       console.error(err);
       alert("❌ Ошибка сети");
     }
+
+    checkLogin();
   });
+
 }
+
+
+export function setupLogout() {
+  const logoutForm = document.getElementById("logout-btn");
+  if (!logoutForm) return;
+
+
+  logoutForm.addEventListener("click", async () => {
+    console.log(logoutForm);
+
+    try {
+      /*  const response = await fetch(`${apiUrl}/auth/logout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+         // body: JSON.stringify({ username, password }),
+        });
+  
+        if (!response.ok) {
+          alert("❌ Ошибка: " + response.status);
+          return;
+        }*/
+
+      sessionStorage.removeItem("authToken");
+      sessionStorage.removeItem("userRole");
+      sessionStorage.removeItem("userName");
+
+      // const data = await response.json();
+
+
+    } catch (err) {
+      console.error(err);
+      alert("❌ Ошибка ");
+    }
+    checkLogin();
+  });
+
+}
+
+function isTokenExpired(token) {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const exp = payload.exp * 1000; // exp в секундах, переводим в ms
+    return Date.now() > exp;
+  } catch (e) {
+    return true; // если токен кривой — считаем истёкшим
+  }
+}
+
+export function checkLogin() {
+
+  const userRole = sessionStorage.getItem("userRole") || "user";
+  const userName = sessionStorage.getItem("userName") || "";
+  const token = sessionStorage.getItem("authToken");
+
+  const loginBtn = document.querySelector('button[data-bs-toggle="modal"]');
+  // loginBtn.textContent = ` Login`;
+
+  ///Switch - ${sessionStorage.getItem('userRole')}
+  const logoutBtn = document.getElementById("logout-btn");
+
+  if (token && userRole && !isTokenExpired(token)) {
+    // залогинен
+    loginBtn.style.display = "none";
+    logoutBtn.style.display = "inline-block";
+    logoutBtn.textContent = `Logout ${userName}`;
+  } else {
+    // токен истёк или его нет
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("userRole");
+
+    // не залогинен
+    loginBtn.style.display = "inline-block";
+    logoutBtn.style.display = "none";
+    loginBtn.textContent = "Login";
+  }
+}
+
